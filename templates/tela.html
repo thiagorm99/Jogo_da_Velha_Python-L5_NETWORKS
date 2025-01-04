@@ -38,6 +38,7 @@
     <div class="container game-container">
         <h1>Jogo da Velha <span class="badge text-bg-secondary">Ola, {{nome}}</span></h1>
         <hr>
+        <div id="alert"></div>
         <div id="game-board" class="mx-auto">
             <div class="game-row">
                 <div class="game-cell" data-x="0" data-y="0"></div>
@@ -100,7 +101,18 @@
                     data: JSON.stringify({ x: y, y: x }),
                     success: function (response) {
                         if (response.mensagem) {
-                            alert(response.mensagem);
+                            //alert(response.mensagem);
+                            const alert = document.getElementById("alert");
+                            const div = document.createElement('div');
+                            if (response.mensagem == "venceu") {
+                                div.className = 'alert alert-success alertdiv';
+                                div.innerHTML = 'Você venceu!!';
+                            }
+                            if (response.mensagem == "perdeu") {
+                                div.className = 'alert alert-danger alertdiv';
+                                div.innerHTML = 'Você perdeu!!';
+                            }
+                            alert.appendChild(div);
                             inicializarTabuleiro(); // Reinicializa o tabuleiro após vitória
                         } else {
                             atualizarTabuleiro(response); // Atualiza o tabuleiro com a resposta da API
@@ -120,6 +132,7 @@
                     contentType: 'application/json',
                     success: function(response) {
                         inicializarTabuleiro();
+                        $(".alertdiv").remove();
 
                     }
                 });

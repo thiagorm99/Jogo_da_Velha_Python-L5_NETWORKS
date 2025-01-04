@@ -95,12 +95,12 @@ def jogar():
     if verificar_vencedor("X"):
         trava = True
         p.cadastrar(pd.DataFrame(jogo).to_json(), 'V', session['idjogador'])
-        return jsonify({"mensagem": f"Você venceu!"}), 200
+        return jsonify({"mensagem": f"venceu"}), 200
     
     if verificar_vencedor("O"):
         trava = True
         p.cadastrar(pd.DataFrame(jogo).to_json(), 'P', session['idjogador'])
-        return jsonify({"mensagem": f"Você perdeu!"}), 200
+        return jsonify({"mensagem": f"perdeu"}), 200
 
     return pd.DataFrame(jogo).to_json()
 
