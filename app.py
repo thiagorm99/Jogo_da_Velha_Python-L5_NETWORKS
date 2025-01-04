@@ -83,7 +83,7 @@ def jogar():
     jogo[x, y] = jogador_atual
 
 
-    if(np.sum(jogo == None) > 1):
+    if(np.sum(jogo == None) > 1 and verificar_vencedor("X") == False):
         while True:
             xo = random.randint(0, 2)
             yo = random.randint(0, 2)

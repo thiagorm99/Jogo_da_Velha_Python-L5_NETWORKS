@@ -19,6 +19,7 @@ class Jogadores:
         try:
             cursor = self.conn.cursor()
             cursor.execute("DELETE FROM jogadores WHERE id = ?", (id,))
+            cursor.execute("DELETE FROM partidas WHERE id_jogador = ?", (id,))
             self.conn.commit()
             return {"message": "jogador deletado com sucesso"}
         except Exception as e:
