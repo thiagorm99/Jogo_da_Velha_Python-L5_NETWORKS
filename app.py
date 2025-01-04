@@ -19,7 +19,9 @@ trava = False
 
 @app.route('/')
 def index():
-   return render_template("jogadores.html")
+    global jogo
+    jogo = None
+    return render_template("jogadores.html")
 
 @app.route('/telajogo/<int:id>')
 def telajogo(id):
