@@ -24,7 +24,8 @@ def index():
 @app.route('/telajogo/<int:id>')
 def telajogo(id):
    session['idjogador'] = id
-   return render_template("tela.html")
+   nome = j.getnome(id)[0]['nome']
+   return render_template("tela.html", nome = nome)
 
 
 @app.route('/cadastrarjogador', methods=['POST'])

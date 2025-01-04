@@ -32,3 +32,12 @@ class Jogadores:
             return [dict(j) for j in jogadres]
         except Exception as e:
             return {"error": str(e)}
+        
+    def getnome(self, id):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT nome FROM jogadores where id = ?", (id,))
+            nome = cursor.fetchall()
+            return [dict(j) for j in nome]
+        except Exception as e:
+            return {"error": str(e)}

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jogo da Velha</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://bootswatch.com/5/slate/bootstrap.min.css" rel="stylesheet">
     <style>
         .game-cell {
             width: 100px;
@@ -20,14 +20,24 @@
             display: flex;
         }
         .game-container {
-            margin-top: 50px;
+            margin-top: 0px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Ocupa toda a altura da viewport */
+            flex-direction: column; /* Alinha os itens na vertical */
             text-align: center;
         }
+        #game-board {
+            display: inline-block; /* Certifica que o tabuleiro tem o tamanho correto */
+        }
     </style>
+    
 </head>
 <body>
     <div class="container game-container">
-        <h1>Jogo da Velha</h1>{{ session['idjogador'] }}
+        <h1>Jogo da Velha <span class="badge text-bg-secondary">Ola, {{nome}}</span></h1>
+        <hr>
         <div id="game-board" class="mx-auto">
             <div class="game-row">
                 <div class="game-cell" data-x="0" data-y="0"></div>
@@ -44,8 +54,10 @@
                 <div class="game-cell" data-x="2" data-y="1"></div>
                 <div class="game-cell" data-x="2" data-y="2"></div>
             </div>
+            <hr>
         </div>
-        <button type="button" id="novojogo">Novo Jogo</button>
+        <button type="button" class="btn btn-warning" id="novojogo">Novo Jogo</button><br>
+        <a href="/" class="btn btn-primary" id="">Voltar</a>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
