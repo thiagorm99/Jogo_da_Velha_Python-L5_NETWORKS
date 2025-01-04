@@ -3,8 +3,10 @@ import numpy as np
 import pandas as pd
 import random
 from Jogadores import Jogadores
+from Partidas import Partidas
 
 j = Jogadores()
+p = Partidas()
 app = Flask(__name__)
 
 app.secret_key = 'dasdasdasdasdsadsd78as7d9as7d9as7d987as9d8'
@@ -89,12 +91,14 @@ def jogar():
     if verificar_vencedor(vencedorx):
         trava = True
         idvencedor = session['idjogador']
+        p.cadastrar(pd.DataFrame(jogo).to_json(), 'V', idvencedor)
         return jsonify({"mensagem": f"Jogador X venceu!"}), 200
     
     vencedoro = "O"
     if verificar_vencedor(vencedoro):
         trava = True
         idperdedor = session['idjogador']
+        p.cadastrar(pd.DataFrame(jogo).to_json(), 'P', idperdedor)
         return jsonify({"mensagem": f"Jogador O venceu!"}), 200
 
     return pd.DataFrame(jogo).to_json()
