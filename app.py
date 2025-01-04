@@ -10,6 +10,7 @@ app = Flask(__name__)
 # Variáveis globais para gerenciar o jogo
 jogo = None
 jogador_atual = "X"
+trava = False
 
 @app.route('/')
 def index():
@@ -39,7 +40,10 @@ def tabuleiro():
 
 @app.route('/jogar', methods=['POST'])
 def jogar():
-    global jogo, jogador_atual
+    global jogo, jogador_atual, trava
+
+    if trava == True:
+        return {"erro": "Jogo finalizado, inicie um novo jogo."}, 400
 
     if jogo is None:
         return jsonify(
@@ -72,11 +76,13 @@ def jogar():
     vencedorx = "X"
     if verificar_vencedor(vencedorx):
         #jogo[:] = None
+        trava = True
         return jsonify({"mensagem": f"Jogador X venceu!"}), 200
     
     vencedoro = "O"
     if verificar_vencedor(vencedoro):
         #jogo[:] = None
+        trava = True
         return jsonify({"mensagem": f"Jogador O venceu!"}), 200
 
     #jogador_atual = "O" if jogador_atual == "X" else "X"
@@ -84,8 +90,9 @@ def jogar():
 
 @app.route('/novojogo', methods=['GET'])
 def novojogo():
-    global jogo
+    global jogo, trava
     jogo = None
+    trava = False
     return jsonify({"mensagem": f"Novo jogo iniciado!"}), 200
 
 
