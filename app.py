@@ -25,6 +25,8 @@ def index():
 
 @app.route('/telajogo/<int:id>')
 def telajogo(id):
+   global trava
+   trava = False
    session['idjogador'] = id
    nome = j.getnome(id)[0]['nome']
    return render_template("tela.html", nome = nome)
@@ -90,19 +92,15 @@ def jogar():
             jogo[xo, yo] = "O"
             break
 
-    vencedorx = "X"
-    if verificar_vencedor(vencedorx):
+    if verificar_vencedor("X"):
         trava = True
-        idvencedor = session['idjogador']
-        p.cadastrar(pd.DataFrame(jogo).to_json(), 'V', idvencedor)
-        return jsonify({"mensagem": f"Jogador X venceu!"}), 200
+        p.cadastrar(pd.DataFrame(jogo).to_json(), 'V', session['idjogador'])
+        return jsonify({"mensagem": f"Você venceu!"}), 200
     
-    vencedoro = "O"
-    if verificar_vencedor(vencedoro):
+    if verificar_vencedor("O"):
         trava = True
-        idperdedor = session['idjogador']
-        p.cadastrar(pd.DataFrame(jogo).to_json(), 'P', idperdedor)
-        return jsonify({"mensagem": f"Jogador O venceu!"}), 200
+        p.cadastrar(pd.DataFrame(jogo).to_json(), 'P', session['idjogador'])
+        return jsonify({"mensagem": f"Você perdeu!"}), 200
 
     return pd.DataFrame(jogo).to_json()
 
