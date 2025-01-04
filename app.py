@@ -16,6 +16,10 @@ trava = False
 def index():
    return render_template("tela.html")
 
+@app.route('/telajogadores')
+def telajogadores():
+   return render_template("jogadores.html")
+
 
 @app.route('/cadastrarjogador', methods=['POST'])
 def cadastrarjogador():
@@ -23,8 +27,8 @@ def cadastrarjogador():
     return j.cadastrar(nome=dados.get('nome'))
 
 
-@app.route('/litarjogadores', methods=['GET'])
-def litarjogadores():
+@app.route('/listarjogadores', methods=['GET'])
+def listarjogadores():
     return jsonify(j.listartodos())
 
 
