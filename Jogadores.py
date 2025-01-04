@@ -15,6 +15,15 @@ class Jogadores:
         except Exception as e:
             return {"error": str(e)}
         
+    def deletar(self, id):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("DELETE FROM jogadores WHERE id = ?", (id,))
+            self.conn.commit()
+            return {"message": "jogador deletado com sucesso"}
+        except Exception as e:
+            return {"error": str(e)}
+        
     def listartodos(self):
         try:
             cursor = self.conn.cursor()

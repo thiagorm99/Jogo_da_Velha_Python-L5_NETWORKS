@@ -26,6 +26,10 @@ def cadastrarjogador():
     dados = request.get_json()
     return j.cadastrar(nome=dados.get('nome'))
 
+@app.route('/deletarjogador/<int:id>', methods=['DELETE'])
+def deletarjogador(id):
+    return jsonify(j.deletar(id))
+
 
 @app.route('/listarjogadores', methods=['GET'])
 def listarjogadores():

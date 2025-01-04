@@ -57,7 +57,7 @@
                         <span>${jogador.nome}</span>
                         <div>
                             <a href="#" class="btn btn-success btn-sm me-1">Jogar</a>
-                            <a href="#" class="btn btn-danger btn-sm me-1">Deletar</a>
+                            <button class="btnDeletar btn btn-danger btn-sm me-1" data-id="${jogador.id}">Deletar</button>
                             <a href="#" class="btn btn-secondary btn-sm">Estatísticas</a>
                         </div>
                     `;
@@ -76,6 +76,47 @@
                 error: function (err) {
                     console.error('Erro ao listar jogadores:', err);
                 }
+            });
+
+                
+            document.getElementById('btnCadastrar').addEventListener('click', function () {
+                const nomeJogador = document.getElementById('novoJogador').value;
+    
+                if (nomeJogador.trim() === '') {
+                    alert('Por favor, insira o nome do jogador.');
+                    return;
+                }
+    
+                $.ajax({
+                    url: '/cadastrarjogador',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ nome: nomeJogador }),
+                    success: function (response) {
+                        console.log('Jogador cadastrado:', response);
+                        location.reload();
+                    },
+                    error: function (err) {
+                        console.error('Erro ao cadastrar jogador:', err);
+                    }
+                });
+            });
+
+                $('#listaJogadores').on('click', '.btnDeletar', function () {
+                const idjogador = $(this).data('id');
+                console.log(idjogador);
+
+                $.ajax({
+                    url: `/deletarjogador/${idjogador}`,
+                    method: 'DELETE',
+                    success: function (response) {
+                        console.log('Jogador deletado:', response);
+                        location.reload();
+                    },
+                    error: function (err) {
+                        console.error('Erro ao deletar jogador:', err);
+                    }
+                });
             });
         });
     </script>
