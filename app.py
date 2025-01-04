@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, session
 import numpy as np
 import pandas as pd
 import random
@@ -7,6 +7,9 @@ from Jogadores import Jogadores
 j = Jogadores()
 app = Flask(__name__)
 
+app.secret_key = 'dasdasdasdasdsadsd78as7d9as7d9as7d987as9d8'
+
+
 # Variáveis globais para gerenciar o jogo
 jogo = None
 jogador_atual = "X"
@@ -14,11 +17,12 @@ trava = False
 
 @app.route('/')
 def index():
-   return render_template("tela.html")
-
-@app.route('/telajogadores')
-def telajogadores():
    return render_template("jogadores.html")
+
+@app.route('/telajogo/<int:id>')
+def telajogo(id):
+   session['idjogador'] = id
+   return render_template("tela.html")
 
 
 @app.route('/cadastrarjogador', methods=['POST'])
@@ -83,17 +87,16 @@ def jogar():
 
     vencedorx = "X"
     if verificar_vencedor(vencedorx):
-        #jogo[:] = None
         trava = True
+        idvencedor = session['idjogador']
         return jsonify({"mensagem": f"Jogador X venceu!"}), 200
     
     vencedoro = "O"
     if verificar_vencedor(vencedoro):
-        #jogo[:] = None
         trava = True
+        idperdedor = session['idjogador']
         return jsonify({"mensagem": f"Jogador O venceu!"}), 200
 
-    #jogador_atual = "O" if jogador_atual == "X" else "X"
     return pd.DataFrame(jogo).to_json()
 
 @app.route('/novojogo', methods=['GET'])

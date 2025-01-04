@@ -31,7 +31,7 @@
                         <!-- <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span>dsda</span>
                             <div>
-                                <a href="#" class="btn btn-success btn-sm me-1">Jogar</a>
+                                <a href="" class="btn btn-success btn-sm me-1">Jogar</a>
                                 <a href="#" class="btn btn-danger btn-sm me-1">Deletar</a>
                                 <a href="#" class="btn btn-secondary btn-sm">Estatísticas</a>
                             </div>
@@ -45,7 +45,6 @@
     <script>
         $(document).ready(function () {
             function atualizarListaJogadores(jogadores) {
-                console.log(jogadores);
                 const listaJogadores = document.getElementById('listaJogadores');
                 listaJogadores.innerHTML = '';
                 
@@ -56,7 +55,7 @@
                     li.innerHTML = `
                         <span>${jogador.nome}</span>
                         <div>
-                            <a href="#" class="btn btn-success btn-sm me-1">Jogar</a>
+                            <a href="/telajogo/${jogador.id}" class="btn btn-success btn-sm me-1">Jogar</a>
                             <button class="btnDeletar btn btn-danger btn-sm me-1" data-id="${jogador.id}">Deletar</button>
                             <a href="#" class="btn btn-secondary btn-sm">Estatísticas</a>
                         </div>
@@ -70,7 +69,6 @@
                 method: 'GET',
                 contentType: 'application/json',
                 success: function (response) {
-                    console.log(response);
                     atualizarListaJogadores(response);
                 },
                 error: function (err) {
