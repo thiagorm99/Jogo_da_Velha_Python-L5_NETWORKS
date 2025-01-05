@@ -7,16 +7,16 @@
     <link href="https://bootswatch.com/5/slate/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container mt-5">
+    <div class="container mt-5 text">
         <!-- Título e Formulário de Cadastro -->
-        <div class="row mb-4">
-            <div class="col">
+        <div class="row justify-content-center mb-4">
+            <div class="col-8 mx-auto">
                 <h1 class="text-center">Jogo da Velha - Jogadores</h1>
             </div>
         </div>
 
-        <div class="row mb-4">
-            <div class="col">
+        <div class="row justify-content-center mb-4">
+            <div class="col-8 mx-auto">
                 <form id="formCadastro" class="d-flex">
                     <input type="text" id="novoJogador" class="form-control me-2" placeholder="Digite o nome do jogador">
                     <button type="button" id="btnCadastrar" class="btn btn-primary">Cadastrar</button>
@@ -25,29 +25,22 @@
         </div>
 
         <!-- Lista de Jogadores -->
-        <div class="row">
-            <div class="col">
+        <div class="row justify-content-center">
+            <div class="col-8 mx-auto">
                 <ul id="listaJogadores" class="list-group">
-                        <!-- <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>dsda</span>
-                            <div>
-                                <a href="" class="btn btn-success btn-sm me-1">Jogar</a>
-                                <a href="#" class="btn btn-danger btn-sm me-1">Deletar</a>
-                                <a href="#" class="btn btn-secondary btn-sm">Estatísticas</a>
-                            </div>
-                        </li> -->
+                    <!-- Jogadores serão listados aqui -->
                 </ul>
             </div>
         </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function () {
             function atualizarListaJogadores(jogadores) {
                 const listaJogadores = document.getElementById('listaJogadores');
                 listaJogadores.innerHTML = '';
-                
 
                 jogadores.forEach(jogador => {
                     const li = document.createElement('li');
@@ -63,7 +56,7 @@
                     listaJogadores.appendChild(li);
                 });
             }
-    
+
             $.ajax({
                 url: '/listarjogadores',
                 method: 'GET',
@@ -76,22 +69,20 @@
                 }
             });
 
-                
-            document.getElementById('btnCadastrar').addEventListener('click', function () {
-                const nomeJogador = document.getElementById('novoJogador').value;
-    
-                if (nomeJogador.trim() === '') {
+            $('#btnCadastrar').click(function () {
+                const nomeJogador = $('#novoJogador').val().trim();
+
+                if (!nomeJogador) {
                     alert('Por favor, insira o nome do jogador.');
                     return;
                 }
-    
+
                 $.ajax({
                     url: '/cadastrarjogador',
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({ nome: nomeJogador }),
-                    success: function (response) {
-                        console.log('Jogador cadastrado:', response);
+                    success: function () {
                         location.reload();
                     },
                     error: function (err) {
@@ -100,15 +91,13 @@
                 });
             });
 
-                $('#listaJogadores').on('click', '.btnDeletar', function () {
+            $('#listaJogadores').on('click', '.btnDeletar', function () {
                 const idjogador = $(this).data('id');
-                console.log(idjogador);
 
                 $.ajax({
                     url: `/deletarjogador/${idjogador}`,
                     method: 'DELETE',
-                    success: function (response) {
-                        console.log('Jogador deletado:', response);
+                    success: function () {
                         location.reload();
                     },
                     error: function (err) {
@@ -118,8 +107,5 @@
             });
         });
     </script>
-    
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
