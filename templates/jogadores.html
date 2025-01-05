@@ -50,7 +50,7 @@
                         <div>
                             <a href="/telajogo/${jogador.id}" class="btn btn-success btn-sm me-1">Jogar</a>
                             <button class="btnDeletar btn btn-danger btn-sm me-1" data-id="${jogador.id}">Deletar</button>
-                            <a href="#" class="btn btn-secondary btn-sm">Estatísticas</a>
+                            <button class="btnEstatisticas btn btn-secondary btn-sm" data-id="${jogador.id}">Estatísticas</button>
                         </div>
                     `;
                     listaJogadores.appendChild(li);
@@ -99,6 +99,25 @@
                     method: 'DELETE',
                     success: function () {
                         location.reload();
+                    },
+                    error: function (err) {
+                        console.error('Erro ao deletar jogador:', err);
+                    }
+                });
+            });
+
+            $('#listaJogadores').on('click', '.btnEstatisticas', function () {
+                const idjogador = $(this).data('id');
+
+                $.ajax({
+                    url: `/estatisticas/${idjogador}`,
+                    method: 'GET',
+                    success: function (response) {
+                        text = '';
+                        response.forEach((r) => {
+                            text+=`${r.status}: ${r.quantidade}\n`;
+                        });
+                        alert(text);
                     },
                     error: function (err) {
                         console.error('Erro ao deletar jogador:', err);

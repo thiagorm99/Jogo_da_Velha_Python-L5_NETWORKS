@@ -120,6 +120,10 @@ def verificar_vencedor(jogador):
         return True
     return False
 
+@app.route('/estatisticas/<int:id>', methods=['GET'])
+def estatisticas(id):
+    return jsonify(j.estatisticas(id))
+
 
 if __name__ == '__main__':
     app.run(debug=True)

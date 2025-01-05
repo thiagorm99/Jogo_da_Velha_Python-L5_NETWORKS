@@ -42,3 +42,24 @@ class Jogadores:
             return [dict(j) for j in nome]
         except Exception as e:
             return {"error": str(e)}
+        
+    def estatisticas(self, id):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute('''
+            select
+            case when status = 'V' then 'venceu'
+            when status = 'P' then 'perdeu'
+            else 'empatou'
+            end as status,
+            count(p.id) as quantidade
+            from jogadores as j
+            inner join partidas as p 
+            on j.id = p.id_jogador 
+            where j.id = ?
+            group by status
+            ''', (id,))
+            res = cursor.fetchall()
+            return [dict(j) for j in res]
+        except Exception as e:
+            return {"error": str(e)}
