@@ -5,6 +5,11 @@ import random
 from Jogadores import Jogadores
 from Partidas import Partidas
 
+import sqlite3
+import json
+from sklearn.tree import DecisionTreeClassifier
+import pickle
+
 j = Jogadores()
 p = Partidas()
 app = Flask(__name__)
@@ -84,13 +89,29 @@ def jogar():
 
 
     if(np.sum(jogo == None) > 1 and verificar_vencedor("X") == False):
-        while True:
-            xo = random.randint(0, 2)
-            yo = random.randint(0, 2)
-            if(jogo[xo, yo] is not None):
-                continue
+        # while True:
+        #     xo = random.randint(0, 2)
+        #     yo = random.randint(0, 2)
+        #     if(jogo[xo, yo] is not None):
+        #         continue
+        #     jogo[xo, yo] = "O"
+        #     break
+
+        modelo_ml, mensagem = processar_e_treinar()
+
+        if modelo_ml is None:
+            return jsonify({"erro": mensagem}), 500
+
+        # Transformar o estado atual do tabuleiro
+        estado_tabuleiro = np.where(jogo == None, 0, np.where(jogo == "X", 1, 2)).flatten()
+
+        # Prever o próximo movimento
+        movimento_ml = modelo_ml.predict([estado_tabuleiro])[0]
+        xo, yo = divmod(movimento_ml, 3)
+
+        # Fazer o movimento do "O"
+        if jogo[xo, yo] is None:
             jogo[xo, yo] = "O"
-            break
 
     if verificar_vencedor("X"):
         trava = True
@@ -124,6 +145,44 @@ def verificar_vencedor(jogador):
 def estatisticas(id):
     return jsonify(j.estatisticas(id))
 
+def processar_e_treinar():
+    partidas = p.partidastreino()
+
+    X = []  # Estados do tabuleiro
+    y = []  # Movimentos feitos por "O"
+
+    for partida_json, status in partidas:
+        # Carregar o tabuleiro final
+        tabuleiro_final = json.loads(partida_json)
+        tabuleiro = pd.DataFrame(tabuleiro_final)
+
+        # Transformar em uma matriz numérica
+        estado_atual = tabuleiro.replace({"X": 1, "O": 2, None: 0}).to_numpy()
+
+        #  reconstruir o jogo
+        for i in range(3):
+            for j in range(3):
+                if tabuleiro.iloc[i, j] == "O":
+                    # Estado do tabuleiro antes do movimento
+                    estado_anterior = estado_atual.copy()
+                    estado_anterior[i, j] = 0  # Remover o movimento para simular estado anterior
+
+                    # Adicionar o estado e o movimento ao dataset
+                    X.append(estado_anterior.flatten())
+                    y.append(i * 3 + j)  # Movimento é representado como índice único (0-8)
+
+    if not X or not y:
+        return None, "Sem dados suficientes para treinar o modelo."
+
+    # Converter para arrays numpy
+    X = np.array(X)
+    y = np.array(y)
+
+    # Treinar o modelo
+    clf = DecisionTreeClassifier()
+    clf.fit(X, y)
+
+    return clf, "Modelo treinado com sucesso!"
 
 if __name__ == '__main__':
     app.run(debug=True)

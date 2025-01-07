@@ -14,3 +14,8 @@ class Partidas:
             return {"message": "jogador adicionado com sucesso"}
         except Exception as e:
             return {"error": str(e)}
+        
+    def partidastreino(self):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT partida, status FROM partidas ORDER BY RANDOM() limit 10")
+        return cursor.fetchall()
