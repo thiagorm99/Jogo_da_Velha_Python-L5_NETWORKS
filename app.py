@@ -19,11 +19,14 @@ jogo = None
 jogador_atual = "X"
 trava = False
 
+# ========== FRONT END ==========
 @app.route('/')
 def index():
     global jogo
     jogo = None
     return render_template("jogadores.html")
+
+
 
 @app.route('/telajogo/<int:id>')
 def telajogo(id):
@@ -34,19 +37,25 @@ def telajogo(id):
    return render_template("tela.html", nome = nome)
 
 
+
+# ========== API DO PROJETO ==========
 @app.route('/cadastrarjogador', methods=['POST'])
 def cadastrarjogador():
     dados = request.get_json()
     return j.cadastrar(nome=dados.get('nome'))
+
+
 
 @app.route('/deletarjogador/<int:id>', methods=['DELETE'])
 def deletarjogador(id):
     return jsonify(j.deletar(id))
 
 
+
 @app.route('/listarjogadores', methods=['GET'])
 def listarjogadores():
     return jsonify(j.listartodos())
+
 
 
 @app.route('/tabuleiro', methods=['GET'])
@@ -57,6 +66,7 @@ def tabuleiro():
                          [None, None, None],
                          [None, None, None]])
     return pd.DataFrame(jogo).to_json()
+
 
 
 @app.route('/jogar', methods=['POST'])
@@ -122,6 +132,8 @@ def jogar():
 
     return pd.DataFrame(jogo).to_json()
 
+
+
 @app.route('/novojogo', methods=['GET'])
 def novojogo():
     global jogo, trava
@@ -130,6 +142,15 @@ def novojogo():
     return jsonify({"mensagem": f"Novo jogo iniciado!"}), 200
 
 
+
+@app.route('/estatisticas/<int:id>', methods=['GET'])
+def estatisticas(id):
+    return jsonify(j.estatisticas(id))
+# ========== FIM DA API ==========
+
+
+
+# ========== VERIFICAR VENCENDOR ==========
 def verificar_vencedor(jogador):
     for i in range(3):
         if all(jogo[i, :] == jogador) or all(jogo[:, i] == jogador):
@@ -138,10 +159,9 @@ def verificar_vencedor(jogador):
         return True
     return False
 
-@app.route('/estatisticas/<int:id>', methods=['GET'])
-def estatisticas(id):
-    return jsonify(j.estatisticas(id))
 
+
+# ========== METODO MACHINE LEARNING PARA TREINAR JOGADAS ==========
 def processar_e_treinar():
     partidas = p.partidastreino()
 
@@ -180,6 +200,9 @@ def processar_e_treinar():
     clf.fit(X, y)
 
     return clf, "Modelo treinado com sucesso!"
+# ========== FIM MACHINE LEARNING ==========
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
