@@ -4,11 +4,8 @@ import pandas as pd
 import random
 from Jogadores import Jogadores
 from Partidas import Partidas
-
-import sqlite3
 import json
 from sklearn.tree import DecisionTreeClassifier
-import pickle
 
 j = Jogadores()
 p = Partidas()
